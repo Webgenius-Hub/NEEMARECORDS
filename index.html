@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Neema Records</title>
+<style>
+      /* Global Reset */
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      body { 
+        font-family: Arial, sans-serif; 
+        background: #111; 
+        color: #ddd; 
+        line-height: 1.6; 
+        transition: background 0.3s, color 0.3s; 
+      }
+      a { text-decoration: none; color: inherit; }
+
+      /* Keyframes */
+      @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to   { opacity: 1; transform: translateY(0); }
+      }
+
+      /* Scroll Progress Bar (Progress Tracker) */
+      #progressBar {
+        position: fixed; top: 0; left: 0; height: 4px;
+        background: #f39c12; width: 0%; z-index: 1500; transition: width 0.2s ease;
+      }
+
+      /* HEADER */
+      header {
+        position: fixed; top: 0; left: 0; width: 100%;
+        background: rgba(0, 0, 0, 0.9); padding: 15px 20px;
+        display: flex; justify-content: space-between; align-items: center;
+        z-index: 1000; animation: fadeIn 1s ease forwards;
+      }
+      header .logo { font-size: 24px; font-weight: bold; color: #fff; }
+      /* Navigation */
+      nav { position: relative; }
+      nav ul { list-style: none; display: flex; }
+      nav ul li { margin: 0 15px; }
+      nav ul li a:hover { color: #f39c12; }
+      /* Mobile Navigation Toggle */
+      #menu-toggle { display: none; font-size: 28px; color: #fff; cursor: pointer; }
+      @media(max-width: 768px) {
+        nav ul {
+          flex-direction: column; position: fixed; top: 0; left: -250px;
+          width: 250px; height: 100%; background: transparent;
+          padding: 60px 20px; transition: left 0.3s ease; z-index: 1200;
+        }
+        nav ul.active { left: 0; }
+        nav ul li { margin: 20px 0; text-align: left; }
+        #menu-toggle { display: block; }
+      }
+
+      /* HERO SECTION */
+      .hero {
+        height: 100vh; background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)),
+        url('https://i.postimg.cc/s2ft0QPC/pexels-media-164938.jpg') no-repeat center/cover;
+        display: flex; flex-direction: column; align-items: center; justify-content: center;
+        text-align: center; padding: 0 20px; margin-top: 70px;
+        animation: fadeIn 1s ease forwards;
+      }
+      .hero h1 { font-size: 48px; margin-bottom: 20px; }
+      .hero p { font-size: 20px; max-width: 600px; }
+
+      /* ABOUT SECTION with Collapsible Items */
+      .about {
+        padding: 60px 20px; background: rgba(255,255,255,0.05);
+        max-width: 1000px; margin: 40px auto;
+        border-radius: 8px; border: 1px solid rgba(255,255,255,0.2);
+        animation: fadeIn 1s ease forwards; text-align: center;
+      }
+      .about h2 { font-size: 36px; color: #f39c12; margin-bottom: 20px; }
+      .about p.lead { font-size: 18px; color: #ccc; margin-bottom: 30px; }
+      .about-section {
+        display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px;
+      }
+      .about-item { background: rgba(0,0,0,0.2); padding: 15px;
+                    border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); }
+      /* Collapsible header styling */
+      .collapsible-header {
+        background: transparent; border: none; 
+        color: #f39c12; font-size: 20px; font-weight: bold;
+        width: 100%; text-align: center; cursor: pointer; padding: 10px 0;
+      }
+      .collapsible-header:after {
+        content: '\002B'; float: right; margin-right: 20px;
+      }
+      .collapsible-header.active:after {
+        content: "\2212";
+      }
+      .collapsible-content {
+        padding: 0 20px 10px 20px; display: none;
+        font-size: 16px; color: #ddd; text-align: center;
+      }
+
+      /* GALLERY SECTION */
+      .gallery {
+        padding: 60px 20px; max-width: 1000px; margin: 40px auto; animation: fadeIn 1s ease forwards;
+      }
+      .gallery h2 { text-align: center; color: #f39c12; font-size: 32px; margin-bottom: 40px; }
+      .gallery-grid {
+        display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;
+      }
+      .gallery-grid figure {
+        margin: 0; overflow: hidden; border-radius: 8px;
+        border: 1px solid rgba(255,255,255,0.2);
+        box-shadow: 0px 5px 15px rgba(0,0,0,0.3); cursor: pointer;
+        transition: transform 0.3s ease;
+      }
+      .gallery-grid figure:hover { transform: scale(1.02); }
+      .gallery-grid img {
+        width: 100%; height: 200px; object-fit: cover; display: block;
+      }
+      .gallery-grid figcaption {
+        padding: 10px; background: rgba(0,0,0,0.7); color: #fff;
+        text-align: center; font-size: 16px;
+      }
+
+      /* TESTIMONIALS SECTION */
+      .testimonials {
+        padding: 60px 20px; background: rgba(255,255,255,0.05);
+        max-width: 800px; margin: 40px auto;
+        border-radius: 8px; border: 1px solid rgba(255,255,255,0.2);
+        animation: fadeIn 1s ease forwards; text-align: center;
+      }
+      .testimonials h2 { font-size: 32px; color: #f39c12; margin-bottom: 20px; }
+      .testimonial { font-size: 18px; color: #ccc; font-style: italic; margin-bottom: 20px; }
+      .testimonial span { display: block; margin-top: 10px; color: #f39c12; font-weight: bold; }
+
+      /* PRICING TABLE (Services) */
+      .pricing {
+        padding: 60px 20px; max-width: 800px; margin: 40px auto;
+        text-align: center; animation: fadeIn 1s ease forwards;
+      }
+      .pricing h2 { font-size: 32px; color: #f39c12; margin-bottom: 20px; }
+      .pricing table {
+        width: 100%; border-collapse: collapse; margin: 0 auto;
+      }
+      .pricing th, .pricing td {
+        padding: 12px; border: 1px solid rgba(255,255,255,0.2);
+      }
+      .pricing th { background: rgba(0,0,0,0.3); color: #f39c12; }
+
+      /* PRODUCER PROFILE */
+      .producers {
+        padding: 60px 20px; max-width: 1000px; margin: 40px auto;
+        text-align: center; animation: fadeIn 1s ease forwards;
+      }
+      .producers h2 { font-size: 32px; color: #f39c12; margin-bottom: 20px; }
+      .producer-profiles {
+        display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px;
+      }
+      .producer-card {
+        background: rgba(0,0,0,0.2); padding: 15px;
+        border-radius: 8px; border: 1px solid rgba(255,255,255,0.2);
+      }
+      .producer-card img { width: 100%; border-radius: 50%; }
+      .producer-card h3 { margin: 10px 0; color: #f39c12; }
+      .producer-card p { font-size: 16px; }
+
+      /* BOOKING SECTION */
+      .booking {
+        padding: 60px 20px; background: rgba(255,255,255,0.05); max-width: 600px; margin: 40px auto;
+        border-radius: 8px; border: 1px solid rgba(255,255,255,0.2); animation: fadeIn 1s ease forwards;
+      }
+      .booking h2 { text-align: center; color: #f39c12; margin-bottom: 20px; font-size: 28px; }
+      .booking form {
+        display: flex; flex-direction: column; align-items: center;
+      }
+      .booking form input, .booking form textarea {
+        padding: 12px; margin: 10px 0; border: none; border-radius: 5px;
+        font-size: 16px; width: 100%; max-width: 500px;
+      }
+      .booking form label {
+        width: 100%; max-width: 500px; font-size: 16px;
+        margin-top: 10px; text-align: center; color: #ccc;
+      }
+      .booking form input[type="date"], .booking form input[type="time"] {
+        text-align: center; background: #f4f4f4; color: #333;
+      }
+      .booking form button {
+        padding: 12px; background: #f39c12; font-size: 18px;
+        border: none; color: #111; cursor: pointer; width: 100%;
+        max-width: 500px; margin-top: 20px;
+      }
+      .booking form button:hover { background: #e67e22; }
+
+      /* FOOTER */
+      footer {
+        text-align: center; padding: 20px; background: #000; color: #888;
+        animation: fadeIn 1s ease forwards;
+      }
+      footer .social { margin-top: 10px; }
+      footer .social a { margin: 0 10px; color: #888; transition: color 0.3s; }
+      footer .social a:hover { color: #f39c12; }
+
+      /* Back to Top Button */
+      #backToTop {
+        position: fixed; bottom: 30px; right: 30px;
+        background: #f39c12; color: #111; border: none; border-radius: 50%;
+        width: 50px; height: 50px; display: flex; align-items: center; justify-content: center;
+        cursor: pointer; font-size: 24px; z-index: 1000;
+        transition: transform 0.5s ease, opacity 0.5s ease;
+      }
+      #backToTop.hidden { transform: translateX(100%); opacity: 0; }
+
+      /* MODAL SLIDER for Gallery */
+      .modal {
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(0,0,0,0.9); display: none; align-items: center; justify-content: center;
+        z-index: 2000; animation: fadeIn 0.5s ease;
+      }
+      .modal img {
+        max-width: 90%; max-height: 80%; border-radius: 10px;
+        box-shadow: 0px 5px 20px rgba(0,0,0,0.5);
+      }
+      .modal-close { position: absolute; top: 20px; right: 30px; font-size: 40px; color: #fff; cursor: pointer; }
+      .modal-btn {
+        position: absolute; top: 50%; transform: translateY(-50%);
+        background: transparent; border: none; color: #fff;
+        font-size: 50px; cursor: pointer; outline: none;
+      }
+      .modal-prev { left: 30px; }
+      .modal-next { right: 30px; }
+</style>
+  </head>
+  <body>
+    <!-- Scroll Progress Bar (Progress Tracker) -->
+    <div id="progressBar"></div>
+
+    <!-- HEADER -->
+    <header>
+      <div class="logo">Neema Records</div>
+      <div id="menu-toggle">&#9776;</div>
+      <nav>
+        <ul id="nav-list">
+          <li><a href="#hero">Home</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="#gallery">Gallery</a></li>
+          <li><a href="#testimonials">Testimonials</a></li>
+          <li><a href="#pricing">Services</a></li>
+          <li><a href="#producers">Our Producer</a></li>
+          <li><a href="#booking">Book</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <!-- HERO SECTION -->
+    <section class="hero" id="hero">
+      <h1>Welcome to Neema Records</h1>
+      <p>Your premium destination for music production, recording, and creative sound engineering.</p>
+    </section>
+
+    <!-- ABOUT SECTION with Collapsible Dropdowns -->
+    <section class="about" id="about">
+      <h2>Our Vision &amp; Values</h2>
+      <p class="lead">
+        At Neema Records, we fuse passion with cutting-edge technology to craft extraordinary soundscapes.
+        Located at Musikoma Bakery, Bungoma, our studio thrives on community energy, offering a creative haven where artists
+        can bring their musical visions to life.
+      </p>
+      <div class="about-section">
+        <div class="about-item">
+          <button class="collapsible-header">Our Creative Goals</button>
+          <div class="collapsible-content">
+            <p>We strive to push the boundaries of sound, innovation, and creativity in every project we undertake.</p>
+          </div>
+        </div>
+        <div class="about-item">
+          <button class="collapsible-header">Our Standards</button>
+          <div class="collapsible-content">
+            <p>Our state-of-the-art studio and experienced team ensure top-tier sound quality and production excellence.</p>
+          </div>
+        </div>
+        <div class="about-item">
+          <button class="collapsible-header">Our Commitments</button>
+          <div class="collapsible-content">
+            <p>We are dedicated to creating a welcoming space where every artist’s vision is nurtured and realized.</p>
+          </div>
+        </div>
+        <div class="about-item">
+          <button class="collapsible-header">Our Achievements</button>
+          <div class="collapsible-content">
+            <p>With award-winning productions and a roster of successful artists, our track record speaks for itself.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- GALLERY SECTION -->
+    <section class="gallery" id="gallery">
+      <h2>Gallery</h2>
+      <div class="gallery-grid">
+        <figure>
+          <img src="https://i.postimg.cc/s2ft0QPC/pexels-media-164938.jpg" alt="Studio Session">
+          <figcaption>Studio Session</figcaption>
+        </figure>
+        <figure>
+          <img src="https://i.postimg.cc/GhQKgMX9/1743588455821.jpg" alt="Mixing Magic">
+          <figcaption>Mixing Magic</figcaption>
+        </figure>
+        <figure>
+          <img src="https://i.postimg.cc/N0yxMQBr/1743588474545.jpg" alt="Recording Vibes">
+          <figcaption>Recording Vibes</figcaption>
+        </figure>
+        <figure>
+          <img src="https://i.postimg.cc/cHwMRTKx/Screenshot-20250402-130721.png" alt="Creative Beats">
+          <figcaption>Creative Beats</figcaption>
+        </figure>
+        <figure>
+          <img src="https://i.postimg.cc/SsFcx8gw/1743588505328.jpg" alt="Production In Action">
+          <figcaption>Production In Action</figcaption>
+        </figure>
+        <figure>
+          <img src="https://i.postimg.cc/GhQKgMX9/1743588455821.jpg" alt="Sound Engineering">
+          <figcaption>Sound Engineering</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- TESTIMONIALS SECTION -->
+    <section class="testimonials" id="testimonials">
+      <h2>What Our Clients Say</h2>
+      <div class="testimonial">
+        "Neema Records transformed my sound with their cutting-edge production and creative insight. A truly professional experience."
+        <span>- Alex Rivera</span>
+      </div>
+      <div class="testimonial">
+        "From recording to mastering, the team at Neema Records delivered exceptional quality and an inspiring creative process."
+        <span>- Jamie Lee</span>
+      </div>
+      <div class="testimonial">
+        "Their expertise and passion for music production shine through in every track they help create."
+        <span>- Morgan Cruz</span>
+      </div>
+    </section>
+
+    <!-- PRICING TABLE (Services) -->
+    <section class="pricing" id="pricing">
+      <h2>Our Services</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Service</th>
+            <th>Duration</th>
+            <th>Price</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Recording Session</td>
+            <td>60 min</td>
+            <td>KSH 15,000</td>
+          </tr>
+          <tr>
+            <td>Mixing</td>
+            <td>30 min</td>
+            <td>KSH 10,000</td>
+          </tr>
+          <tr>
+            <td>Mastering</td>
+            <td>30 min</td>
+            <td>KSH 8,000</td>
+          </tr>
+          <tr>
+            <td>Production Consultation</td>
+            <td>45 min</td>
+            <td>KSH 12,000</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- PRODUCER PROFILE -->
+    <section class="producers" id="producers">
+      <h2>Meet Our Producer</h2>
+      <div class="producer-profiles">
+        <div class="producer-card">
+          <img src="https://i.postimg.cc/s1CvpqCw/1743588544917.jpg" alt="Producer Javexxy">
+          <h3>Producer Javexxy</h3>
+          <p>Specializing in innovative sound engineering and creative music production.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- BOOKING SECTION -->
+    <section class="booking" id="booking">
+      <h2>Book Your Session</h2>
+      <form id="bookingForm">
+        <input type="text" placeholder="Your Name" required>
+        <input type="email" placeholder="Your Email" required>
+        <input type="tel" placeholder="Your Phone Number" required>
+        <label for="appointment-date">Session Date:</label>
+        <input type="date" id="appointment-date" required style="text-align:center;">
+        <label for="appointment-time">Session Time:</label>
+        <input type="time" id="appointment-time" required style="text-align:center;">
+        <textarea placeholder="Your Message" rows="4" required></textarea>
+        <button type="submit">Submit</button>
+      </form>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+      <p>&copy; 2025 Neema Records. All rights reserved.</p>
+      <div class="social">
+        <a href="#" aria-label="Facebook"></a>
+        <a href="#" aria-label="Instagram"></a>
+        <a href="#" aria-label="Twitter"></a>
+      </div>
+    </footer>
+
+    <!-- Back to Top Button -->
+    <button id="backToTop" aria-label="Back to Top">&uarr;</button>
+
+    <!-- MODAL SLIDER for Gallery -->
+    <div id="modal" class="modal">
+      <span id="modalClose" class="modal-close" aria-label="Close">&times;</span>
+      <button id="modalPrev" class="modal-btn modal-prev" aria-label="Previous">
+        <svg width="32" height="32" fill="currentColor" viewBox="0 0 24 24">
+          <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+      </button>
+      <img id="modalImage" src="" alt="Gallery Image" />
+      <button id="modalNext" class="modal-btn modal-next" aria-label="Next">
+        <svg width="32" height="32" fill="currentColor" viewBox="0 0 24 24">
+          <polyline points="9 18 15 12 9 6"></polyline>
+        </svg>
+      </button>
+    </div>
+
+<script>
+      // --- Mobile Navigation ---
+      const menuToggle = document.getElementById('menu-toggle');
+      const navList = document.getElementById('nav-list');
+      menuToggle.addEventListener('click', () => { 
+        navList.classList.toggle('active'); 
+      });
+      document.querySelectorAll('#nav-list li a').forEach(link => {
+        link.addEventListener('click', () => { 
+          if(window.innerWidth <=768){ navList.classList.remove('active'); }
+        });
+      });
+      
+      // --- Scroll Progress Bar ---
+      const progressBar = document.getElementById('progressBar');
+      window.addEventListener('scroll', () => {
+        const scrollTop = window.pageYOffset;
+        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+        const scrolled = (scrollTop / docHeight) * 100;
+        progressBar.style.width = scrolled + "%";
+      });
+      
+      // --- Back to Top Button with Inactivity ---
+      const backToTop = document.getElementById('backToTop');
+      let inactivityTimer;
+      function resetInactivityTimer() {
+        backToTop.classList.remove('hidden');
+        clearTimeout(inactivityTimer);
+        inactivityTimer = setTimeout(() => {
+          backToTop.classList.add('hidden');
+        }, 5000);
+      }
+      window.addEventListener('scroll', () => {
+        backToTop.style.display = (window.pageYOffset > 300) ? 'flex' : 'none';
+        resetInactivityTimer();
+      });
+      window.addEventListener('mousemove', resetInactivityTimer);
+      window.addEventListener('touchstart', resetInactivityTimer);
+      backToTop.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+      
+      // --- Modal Slider for Gallery ---
+      const galleryImages = document.querySelectorAll('.gallery-grid figure img');
+      const modal = document.getElementById('modal');
+      const modalImage = document.getElementById('modalImage');
+      const modalClose = document.getElementById('modalClose');
+      const modalPrev = document.getElementById('modalPrev');
+      const modalNext = document.getElementById('modalNext');
+      const images = [];
+      galleryImages.forEach(img => { images.push(img.getAttribute('src')); });
+      let currentIndex = 0;
+      galleryImages.forEach((img, index) => {
+        img.addEventListener('click', () => { currentIndex = index; openModal(); });
+      });
+      function openModal() {
+        modal.style.display = 'flex';
+        modalImage.src = images[currentIndex];
+      }
+      modalClose.addEventListener('click', () => { modal.style.display = 'none'; });
+      modalPrev.addEventListener('click', () => {
+        currentIndex = (currentIndex - 1 + images.length) % images.length;
+        modalImage.src = images[currentIndex];
+      });
+      modalNext.addEventListener('click', () => {
+        currentIndex = (currentIndex + 1) % images.length;
+        modalImage.src = images[currentIndex];
+      });
+      window.addEventListener('click', (e) => {
+        if (e.target === modal) { modal.style.display = 'none'; }
+      });
+      
+      // --- Booking Form Submission ---
+      const bookingForm = document.getElementById('bookingForm');
+      bookingForm.addEventListener('submit', function(e){
+        e.preventDefault();
+        alert("Thank you for booking with Neema Records! We'll get in touch to confirm your session.");
+        bookingForm.reset();
+      });
+      
+      // --- Collapsible About Items ---
+      const collapsibleHeaders = document.getElementsByClassName("collapsible-header");
+      for (let i = 0; i < collapsibleHeaders.length; i++) {
+        collapsibleHeaders[i].addEventListener("click", function() {
+          this.classList.toggle("active");
+          const content = this.nextElementSibling;
+          content.style.display = (content.style.display === "block") ? "none" : "block";
+        });
+      }
+      
+      // Initialize inactivity timer on page load
+      resetInactivityTimer();
+</script>
+  </body>
+</html>
